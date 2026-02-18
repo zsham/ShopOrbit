@@ -6,14 +6,14 @@ import { getProductInsight } from '../services/geminiService';
 interface ProductCardProps {
   product: Product;
   onAddToCart: () => void;
+  onSelect: () => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onSelect }) => {
   const [insight, setInsight] = useState<string | null>(null);
   const [loadingInsight, setLoadingInsight] = useState(false);
 
   useEffect(() => {
-    // Generate an AI insight for featured products on mount
     const fetchInsight = async () => {
       setLoadingInsight(true);
       const text = await getProductInsight(product.name);
@@ -21,20 +21,27 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
       setLoadingInsight(false);
     };
     
-    // Only fetch insight for certain products to save tokens
     if (parseInt(product.id) <= 4) {
       fetchInsight();
     }
   }, [product.name, product.id]);
 
   return (
-    <div className="bg-white rounded-lg shadow-sm hover:shadow-xl transition-all group overflow-hidden border border-transparent hover:border-[#ee4d2d]/30">
-      <div className="relative aspect-square overflow-hidden bg-gray-50">
+    <div className="bg-white rounded-lg shadow-sm hover:shadow-xl transition-all group overflow-hidden border border-transparent hover:border-[#ee4d2d]/30 flex flex-col">
+      <div 
+        className="relative aspect-square overflow-hidden bg-gray-50 cursor-pointer"
+        onClick={onSelect}
+      >
         <img 
           src={product.image} 
           alt={product.name} 
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+          <span className="bg-white text-gray-900 px-4 py-2 rounded-full font-bold text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow-lg transform translate-y-4 group-hover:translate-y-0 duration-300">
+            View Details
+          </span>
+        </div>
         {product.stock < 10 && (
           <span className="absolute top-2 left-2 bg-[#ee4d2d] text-white text-[10px] font-bold px-2 py-1 rounded">
             ONLY {product.stock} LEFT
@@ -42,8 +49,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
         )}
       </div>
       
-      <div className="p-4 flex flex-col h-full">
-        <div className="mb-2">
+      <div className="p-4 flex flex-col flex-grow">
+        <div className="mb-2 cursor-pointer" onClick={onSelect}>
           <span className="text-[10px] font-bold text-[#ee4d2d] uppercase tracking-wider">{product.category}</span>
           <h3 className="text-sm font-medium line-clamp-2 h-10 group-hover:text-[#ee4d2d] transition-colors">{product.name}</h3>
         </div>
@@ -68,7 +75,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
         <div className="mt-auto flex items-center justify-between pt-4 border-t border-gray-50">
           <span className="text-lg font-bold text-[#ee4d2d]">${product.price.toFixed(2)}</span>
           <button 
-            onClick={onAddToCart}
+            onClick={(e) => {
+              e.stopPropagation();
+              onAddToCart();
+            }}
             className="bg-[#ee4d2d] text-white p-2 rounded-lg hover:bg-[#d73211] active:scale-95 transition-all shadow-sm"
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">

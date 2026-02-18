@@ -4,12 +4,14 @@ import Navbar from './components/Navbar';
 import ProductCard from './components/ProductCard';
 import CartDrawer from './components/CartDrawer';
 import Assistant from './components/Assistant';
+import ProductDetailModal from './components/ProductDetailModal';
 import { Product, CartItem } from './types';
 import { PRODUCTS, CATEGORIES } from './constants';
 
 const App: React.FC = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [showOrderSuccess, setShowOrderSuccess] = useState(false);
@@ -59,6 +61,13 @@ const App: React.FC = () => {
   const cartTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
+  const scrollToProducts = () => {
+    const element = document.getElementById('product-section');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar 
@@ -96,19 +105,23 @@ const App: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex flex-col justify-center p-8 md:p-12">
             <h2 className="text-white text-3xl md:text-5xl font-bold mb-2">Summer Megasale</h2>
             <p className="text-white/90 text-lg md:text-xl">Up to 70% off selected items</p>
-            <button className="mt-4 bg-[#ee4d2d] text-white px-8 py-3 rounded-lg font-bold w-fit hover:bg-[#d73211] transition-colors shadow-lg">
+            <button 
+              onClick={scrollToProducts}
+              className="mt-4 bg-[#ee4d2d] text-white px-8 py-3 rounded-lg font-bold w-fit hover:bg-[#d73211] transition-all shadow-lg active:scale-95"
+            >
               Shop Now
             </button>
           </div>
         </div>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div id="product-section" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 scroll-mt-24">
           {filteredProducts.map(product => (
             <ProductCard 
               key={product.id} 
               product={product} 
               onAddToCart={() => addToCart(product)} 
+              onSelect={() => setSelectedProduct(product)}
             />
           ))}
           {filteredProducts.length === 0 && (
@@ -118,6 +131,13 @@ const App: React.FC = () => {
           )}
         </div>
       </main>
+
+      {/* Product Detail Modal */}
+      <ProductDetailModal 
+        product={selectedProduct} 
+        onClose={() => setSelectedProduct(null)} 
+        onAddToCart={() => selectedProduct && addToCart(selectedProduct)} 
+      />
 
       {/* Cart Drawer */}
       <CartDrawer 
