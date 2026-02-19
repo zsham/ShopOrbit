@@ -5,26 +5,50 @@ import ProductCard from './components/ProductCard';
 import CartDrawer from './components/CartDrawer';
 import Assistant from './components/Assistant';
 import ProductDetailModal from './components/ProductDetailModal';
-import { Product, CartItem } from './types';
+import LoginModal from './components/LoginModal';
+import SellProductModal from './components/SellProductModal';
+import { Product, CartItem, User } from './types';
 import { PRODUCTS, CATEGORIES } from './constants';
 
 const App: React.FC = () => {
+  const [products, setProducts] = useState<Product[]>(PRODUCTS);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [showOrderSuccess, setShowOrderSuccess] = useState(false);
+  
+  // Auth state
+  const [user, setUser] = useState<User | null>(() => {
+    const saved = localStorage.getItem('shop_orbit_user');
+    return saved ? JSON.parse(saved) : null;
+  });
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isSellModalOpen, setIsSellModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem('shop_orbit_user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('shop_orbit_user');
+    }
+  }, [user]);
 
   const filteredProducts = useMemo(() => {
-    return PRODUCTS.filter(p => {
+    return products.filter(p => {
       const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
       const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     });
-  }, [selectedCategory, searchQuery]);
+  }, [selectedCategory, searchQuery, products]);
 
   const addToCart = (product: Product) => {
+    if (!user) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+
     setCart(prev => {
       const existing = prev.find(item => item.id === product.id);
       if (existing) {
@@ -35,6 +59,10 @@ const App: React.FC = () => {
       return [...prev, { ...product, quantity: 1 }];
     });
     setIsCartOpen(true);
+  };
+
+  const addProduct = (newProduct: Product) => {
+    setProducts(prev => [newProduct, ...prev]);
   };
 
   const removeFromCart = (id: string) => {
@@ -75,6 +103,10 @@ const App: React.FC = () => {
         onOpenCart={() => setIsCartOpen(true)} 
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
+        user={user}
+        onLogout={() => setUser(null)}
+        onOpenLogin={() => setIsLoginModalOpen(true)}
+        onOpenSell={() => setIsSellModalOpen(true)}
       />
 
       <main className="flex-grow container mx-auto px-4 py-8">
@@ -132,14 +164,27 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      {/* Product Detail Modal */}
+      {/* Modals */}
       <ProductDetailModal 
         product={selectedProduct} 
         onClose={() => setSelectedProduct(null)} 
         onAddToCart={() => selectedProduct && addToCart(selectedProduct)} 
       />
 
-      {/* Cart Drawer */}
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+        onLogin={(u) => setUser(u)}
+      />
+
+      <SellProductModal 
+        isOpen={isSellModalOpen}
+        onClose={() => setIsSellModalOpen(false)}
+        onAddProduct={addProduct}
+        user={user}
+      />
+
+      {/* Drawer */}
       <CartDrawer 
         isOpen={isCartOpen} 
         onClose={() => setIsCartOpen(false)} 
@@ -160,19 +205,19 @@ const App: React.FC = () => {
         </div>
       )}
 
-      <footer className="bg-white/90 backdrop-blur-md border-t py-12">
+      <footer className="bg-white/90 backdrop-blur-md border-t py-12 mt-12">
         <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="font-bold text-xl mb-4 text-[#ee4d2d]">PabloShop</h3>
+            <h3 className="font-bold text-xl mb-4 text-[#ee4d2d]">ShopOrbit</h3>
             <p className="text-gray-500 text-sm">Experience the future of e-commerce with AI-integrated shopping assistants and seamless payments.</p>
           </div>
           <div>
-            <h4 className="font-bold mb-4">Customer Care</h4>
+            <h4 className="font-bold mb-4">Marketplace</h4>
             <ul className="text-sm text-gray-500 space-y-2">
-              <li>Help Centre</li>
-              <li>Shopee Cares</li>
-              <li>How To Buy</li>
-              <li>Shipping & Delivery</li>
+              <li className="cursor-pointer hover:text-[#ee4d2d]">How to Sell</li>
+              <li className="cursor-pointer hover:text-[#ee4d2d]">Seller Centre</li>
+              <li className="cursor-pointer hover:text-[#ee4d2d]">Community Rules</li>
+              <li className="cursor-pointer hover:text-[#ee4d2d]">Privacy Policy</li>
             </ul>
           </div>
           <div>
@@ -193,7 +238,7 @@ const App: React.FC = () => {
           </div>
         </div>
         <div className="container mx-auto px-4 mt-12 pt-8 border-t text-center text-xs text-gray-400">
-          © 2026 PabloShop. All Rights Reserved. For Testing Only
+          © 2026 ShopOrbit. All Rights Reserved. Marketplace Testing Module Active.
         </div>
       </footer>
     </div>

@@ -8,6 +8,7 @@ export interface Product {
   description: string;
   rating: number;
   stock: number;
+  seller?: string; // Name of the user selling the item
 }
 
 export interface CartItem extends Product {
@@ -17,4 +18,9 @@ export interface CartItem extends Product {
 export interface ChatMessage {
   role: 'user' | 'model';
   text: string;
+}
+
+export interface User {
+  username: string;
+  email: string;
 }

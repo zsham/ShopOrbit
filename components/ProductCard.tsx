@@ -11,20 +11,17 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onSelect }) => {
   const [insight, setInsight] = useState<string | null>(null);
-  const [loadingInsight, setLoadingInsight] = useState(false);
 
   useEffect(() => {
     const fetchInsight = async () => {
-      setLoadingInsight(true);
       const text = await getProductInsight(product.name);
       setInsight(text);
-      setLoadingInsight(false);
     };
     
-    if (parseInt(product.id) <= 4) {
+    if (parseInt(product.id) <= 4 && !product.seller) {
       fetchInsight();
     }
-  }, [product.name, product.id]);
+  }, [product.name, product.id, product.seller]);
 
   return (
     <div className="bg-white rounded-lg shadow-sm hover:shadow-xl transition-all group overflow-hidden border border-transparent hover:border-[#ee4d2d]/30 flex flex-col">
@@ -42,11 +39,20 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onSelec
             View Details
           </span>
         </div>
-        {product.stock < 10 && (
-          <span className="absolute top-2 left-2 bg-[#ee4d2d] text-white text-[10px] font-bold px-2 py-1 rounded">
-            ONLY {product.stock} LEFT
-          </span>
-        )}
+        
+        {/* Badges */}
+        <div className="absolute top-2 left-2 flex flex-col gap-1">
+          {product.seller && (
+            <span className="bg-indigo-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow-md uppercase">
+              COMMUNITY SELLER
+            </span>
+          )}
+          {product.stock < 10 && (
+            <span className="bg-[#ee4d2d] text-white text-[10px] font-bold px-2 py-1 rounded shadow-md">
+              ONLY {product.stock} LEFT
+            </span>
+          )}
+        </div>
       </div>
       
       <div className="p-4 flex flex-col flex-grow">
@@ -61,6 +67,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onSelec
           </div>
         )}
 
+        {product.seller && (
+          <div className="mb-2 flex items-center gap-1 text-[10px] text-gray-400 italic">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-indigo-500">
+              <path fillRule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4.13-5.69Z" clipRule="evenodd" />
+            </svg>
+            Seller: {product.seller}
+          </div>
+        )}
+
         <div className="flex items-center gap-1 mb-2">
           <div className="flex text-yellow-400">
             {[...Array(5)].map((_, i) => (
@@ -69,7 +84,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onSelec
               </svg>
             ))}
           </div>
-          <span className="text-gray-400 text-[10px]">(120+ sold)</span>
+          <span className="text-gray-400 text-[10px]">(Community Rated)</span>
         </div>
 
         <div className="mt-auto flex items-center justify-between pt-4 border-t border-gray-50">

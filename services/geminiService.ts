@@ -8,7 +8,7 @@ export const getShoppingAssistance = async (userMessage: string, chatHistory: an
   const productListString = PRODUCTS.map(p => `${p.name} ($${p.price})`).join(', ');
   
   const systemInstruction = `
-    You are a helpful and friendly shopping assistant for "PabloShop". 
+    You are a helpful and friendly shopping assistant for "ShopOrbit". 
     You help customers find products from our catalog. 
     Our current catalog: ${productListString}.
     If a user asks for recommendations, suggest products from our list.
