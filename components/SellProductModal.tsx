@@ -52,7 +52,7 @@ const SellProductModal: React.FC<SellProductModalProps> = ({ isOpen, onClose, on
             </svg>
             Sell Your Product
           </h2>
-          <p className="text-white/80 text-sm">Join the PabloShop marketplace and earn today.</p>
+          <p className="text-white/80 text-sm">Join the ShopOrbit marketplace and earn today.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="p-8 space-y-4 max-h-[70vh] overflow-y-auto">
