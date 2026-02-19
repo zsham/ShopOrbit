@@ -16,7 +16,8 @@ const SellProductModal: React.FC<SellProductModalProps> = ({ isOpen, onClose, on
     price: '',
     category: 'Computing',
     description: 'testing',
-    image: ''
+    image: '',
+    stock: '1'
   });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -45,12 +46,12 @@ const SellProductModal: React.FC<SellProductModalProps> = ({ isOpen, onClose, on
       description: formData.description,
       image: formData.image || `https://picsum.photos/seed/${formData.name}/600/600`,
       rating: 5.0,
-      stock: 1,
+      stock: parseInt(formData.stock) || 1,
       seller: user.username
     };
 
     onAddProduct(newProduct);
-    setFormData({ name: '', price: '', category: 'Computing', description: 'testing', image: '' });
+    setFormData({ name: '', price: '', category: 'Computing', description: 'testing', image: '', stock: '1' });
     onClose();
   };
 
@@ -80,31 +81,45 @@ const SellProductModal: React.FC<SellProductModalProps> = ({ isOpen, onClose, on
             />
           </div>
 
-          <div className="flex gap-4">
-            <div className="flex-1">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
               <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Unit Price ($)</label>
               <input 
                 required
                 type="number" 
                 step="0.01"
+                min="0"
                 className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-[#ee4d2d]/20 transition-all font-bold"
                 placeholder="0.00"
                 value={formData.price}
                 onChange={e => setFormData({...formData, price: e.target.value})}
               />
             </div>
-            <div className="flex-1">
-              <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-1">ICT Category</label>
-              <select 
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-[#ee4d2d]/20 transition-all font-bold text-slate-700"
-                value={formData.category}
-                onChange={e => setFormData({...formData, category: e.target.value})}
-              >
-                {CATEGORIES.filter(c => c !== 'All').map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
+            <div>
+              <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-1">Units Available</label>
+              <input 
+                required
+                type="number" 
+                min="1"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-[#ee4d2d]/20 transition-all font-bold"
+                placeholder="1"
+                value={formData.stock}
+                onChange={e => setFormData({...formData, stock: e.target.value})}
+              />
             </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-1">ICT Category</label>
+            <select 
+              className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-[#ee4d2d]/20 transition-all font-bold text-slate-700"
+              value={formData.category}
+              onChange={e => setFormData({...formData, category: e.target.value})}
+            >
+              {CATEGORIES.filter(c => c !== 'All').map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
           </div>
 
           <div>
