@@ -40,19 +40,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onSelec
           </span>
         </div>
         
-        {/* Badges */}
-        <div className="absolute top-2 left-2 flex flex-col gap-1">
-          {product.seller && (
-            <span className="bg-indigo-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow-md uppercase">
-              COMMUNITY SELLER
-            </span>
-          )}
-          {product.stock < 10 && (
+        {/* Stock Badge */}
+        {product.stock < 10 && (
+          <div className="absolute top-2 left-2">
             <span className="bg-[#ee4d2d] text-white text-[10px] font-bold px-2 py-1 rounded shadow-md">
-              ONLY {product.stock} LEFT
+              LOW STOCK
             </span>
-          )}
-        </div>
+          </div>
+        )}
       </div>
       
       <div className="p-4 flex flex-col flex-grow">
@@ -84,7 +79,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart, onSelec
               </svg>
             ))}
           </div>
-          <span className="text-gray-400 text-[10px]">(Community Rated)</span>
+          <span className="text-gray-400 text-[10px]">({product.rating})</span>
         </div>
 
         <div className="mt-auto flex items-center justify-between pt-4 border-t border-gray-50">

@@ -5,15 +5,15 @@ import { PRODUCTS } from "../constants";
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
 
 export const getShoppingAssistance = async (userMessage: string, chatHistory: any[]) => {
-  const productListString = PRODUCTS.map(p => `${p.name} ($${p.price})`).join(', ');
+  const productListString = PRODUCTS.map(p => `${p.name} ($${p.price}, Category: ${p.category})`).join(', ');
   
   const systemInstruction = `
-    You are a helpful and friendly shopping assistant for "ShopOrbit". 
-    You help customers find products from our catalog. 
-    Our current catalog: ${productListString}.
-    If a user asks for recommendations, suggest products from our list.
-    Be concise, helpful, and informative.
-    Always try to be persuasive but honest about product features.
+    You are a specialized "ICT Solutions Consultant" for the GLOBAL ICT MARKET (ShopOrbit).
+    Our inventory is strictly Information and Communication Technology: ${productListString}.
+    Your goal is to provide technical advice on hardware, software, and networking solutions.
+    Always be professional and use technical terminology appropriately.
+    If a user asks for non-ICT products (like fashion or food), politely inform them that we specialize exclusively in Global ICT solutions and offer a relevant tech alternative.
+    Recommend specific specs like RAM, CPU types, and bandwidth where appropriate.
   `;
 
   try {
@@ -37,7 +37,7 @@ export const getShoppingAssistance = async (userMessage: string, chatHistory: an
     return response.text;
   } catch (error) {
     console.error("Gemini API Error:", error);
-    return "I'm having a bit of trouble connecting to my brain right now. Please try again!";
+    return "The system core is rebooting. As your ICT Agent, I'll be back online in a moment to help with your tech specs.";
   }
 };
 
@@ -45,7 +45,7 @@ export const getProductInsight = async (productName: string) => {
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
-      contents: `Give a one-sentence clever sales pitch for a product called "${productName}".`,
+      contents: `Give a professional one-sentence technical value proposition for the ICT product: "${productName}".`,
       config: {
         temperature: 0.9,
         maxOutputTokens: 100,
@@ -53,6 +53,6 @@ export const getProductInsight = async (productName: string) => {
     });
     return response.text;
   } catch (error) {
-    return "The perfect addition to your collection.";
+    return "Engineered for high-performance ICT environments.";
   }
 };

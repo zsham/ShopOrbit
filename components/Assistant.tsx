@@ -6,7 +6,7 @@ import { ChatMessage } from '../types';
 const Assistant: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: 'model', text: 'Hi! I am your AI Shopping Assistant. How can I help you find something special today?' }
+    { role: 'model', text: 'Hi! I am your Official ShopOrbit Agent. Ready to help you upgrade your tech rig with the best components and software. What are we building today?' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +30,7 @@ const Assistant: React.FC = () => {
     setIsLoading(true);
 
     const response = await getShoppingAssistance(userMessage, messages);
-    setMessages(prev => [...prev, { role: 'model', text: response || 'Sorry, I missed that.' }]);
+    setMessages(prev => [...prev, { role: 'model', text: response || 'Sorry, my hardware data connection flickered. Please repeat that.' }]);
     setIsLoading(false);
   };
 
@@ -43,12 +43,12 @@ const Assistant: React.FC = () => {
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                 </svg>
               </div>
               <div>
-                <h3 className="font-bold text-sm">Shopping Assistant</h3>
-                <p className="text-[10px] text-white/80 uppercase tracking-widest font-bold">AI Powered</p>
+                <h3 className="font-bold text-sm leading-none">ShopOrbit Agent</h3>
+                <p className="text-[10px] text-white/80 uppercase tracking-widest font-black mt-1">Direct Support</p>
               </div>
             </div>
             <button onClick={() => setIsOpen(false)} className="hover:bg-white/20 p-1 rounded-full">
@@ -73,7 +73,7 @@ const Assistant: React.FC = () => {
             {isLoading && (
               <div className="flex justify-start">
                 <div className="bg-white border text-gray-800 px-4 py-3 rounded-2xl rounded-tl-none shadow-sm text-sm italic animate-pulse">
-                  Gemini is thinking...
+                  Agent is checking inventory...
                 </div>
               </div>
             )}
@@ -85,7 +85,7 @@ const Assistant: React.FC = () => {
               type="text" 
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask for advice or product info..." 
+              placeholder="Ask your ShopOrbit Agent..." 
               className="flex-grow px-4 py-2 bg-gray-100 rounded-full text-sm outline-none focus:ring-2 focus:ring-orange-200 transition-all"
             />
             <button 
@@ -113,9 +113,12 @@ const Assistant: React.FC = () => {
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
           </svg>
         ) : (
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-8 h-8">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
-          </svg>
+          <div className="relative">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-8 h-8">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+            </svg>
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-white rounded-full border-2 border-[#ee4d2d] animate-ping"></div>
+          </div>
         )}
       </button>
 

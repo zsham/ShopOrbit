@@ -27,9 +27,12 @@ const Navbar: React.FC<NavbarProps> = ({
     <nav className="bg-slate-950 text-white sticky top-0 z-40 shadow-xl border-b border-white/10">
       <div className="container mx-auto px-4 py-4 flex flex-col md:flex-row items-center gap-4">
         {/* Logo */}
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-          <div className="w-10 h-10 bg-white text-slate-950 rounded-lg flex items-center justify-center font-black text-xl shadow-inner">S</div>
-          <span className="text-2xl font-bold tracking-tight text-white">ShopOrbit</span>
+        <div className="flex items-center gap-3 cursor-pointer group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+          <div className="w-10 h-10 bg-white text-slate-950 rounded-lg flex items-center justify-center font-black text-xl shadow-inner group-hover:rotate-12 transition-transform">S</div>
+          <div className="flex flex-col leading-tight">
+            <span className="text-2xl font-bold tracking-tight text-white">ShopOrbit</span>
+            <span className="text-[10px] font-black text-[#ee4d2d] uppercase tracking-[0.2em]">GLOBAL ICT MARKET</span>
+          </div>
         </div>
 
         {/* Search Bar */}
